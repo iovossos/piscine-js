@@ -11,5 +11,5 @@ function dogYears(planet, age) {
   };
   let earthAge = (age / 31557600) * 7;
 
-  return Number(Number(earthAge / planets[planet]).toFixed(2));
+  return +(earthAge / planets[planet]).toFixed(2);
 }
