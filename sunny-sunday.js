@@ -1,5 +1,5 @@
 function sunnySunday(date) {
-  // Define the 6-day week days
+  // the 6 day week
   const weekdays = [
     "Monday",
     "Tuesday",
@@ -9,27 +9,54 @@ function sunnySunday(date) {
     "Saturday",
   ];
 
-  // calculate the number of days since 01/01/0001
-  // javaScript Date object uses year 1 as minimum, not year 0
-  const referenceDate = new Date(1, 0, 1); // January 1, 0001
-  referenceDate.setFullYear(1); // Ensure year 1
+  // get the date parts
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // js months are 0-indexed
+  const day = date.getDate();
 
-  // get the input date at midnight to avoid time issues
-  const inputDate = new Date(date);
-  inputDate.setHours(0, 0, 0, 0);
+  // calculate total days since 01/01/0001
+  let totalDays = 0;
 
-  // calculate difference in milliseconds
-  const diffMs = inputDate - referenceDate;
+  // add days for complete years
+  for (let y = 1; y < year; y++) {
+    if (isLeapYear(y)) {
+      totalDays += 366;
+    } else {
+      totalDays += 365;
+    }
+  }
 
-  // convert to days (1 day = 24 * 60 * 60 * 1000 ms)
-  const diffDays = Math.floor(diffMs / (24 * 60 * 60 * 1000));
+  // add days for complete months in the current year
+  const daysInMonth = [
+    31,
+    isLeapYear(year) ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ];
+  for (let m = 1; m < month; m++) {
+    totalDays += daysInMonth[m - 1];
+  }
 
-  // in a 6-day week system, we use modulo 6
-  // since 01/01/0001 is Monday (index 0), we can directly use the remainder
-  const weekdayIndex = diffDays % 6;
+  // add the days in the current month (minus 1 since we start from day 1)
+  totalDays += day - 1;
 
-  // handle negative dates (before 01/01/0001)
-  const adjustedIndex = weekdayIndex < 0 ? weekdayIndex + 6 : weekdayIndex;
+  // get the weekday index in our 6-day system
+  const weekdayIndex = totalDays % 6;
 
-  return weekdays[adjustedIndex];
+  return weekdays[weekdayIndex];
+}
+
+// helper function to check if a year is a leap year
+function isLeapYear(year) {
+  // leap year rules:
+  // divisible by 4 AND (not divisible by 100 OR divisible by 400)
+  return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 }
