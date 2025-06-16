@@ -1,18 +1,36 @@
 function sunnySunday(date) {
-  const start = new Date(1, 0, 1); // 01/01/0001
-  const msPerDay = 24 * 60 * 60 * 1000;
+  // Helper to count leap years before the given year
+  function countLeapYears(y, m) {
+    if (m <= 2) y--; // if Jan or Feb, don't count current year
+    return Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400);
+  }
 
-  // Calculate total days since 01/01/0001
-  const totalDays = Math.floor((date - start) / msPerDay);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // JavaScript months are 0-based
+  const day = date.getDate();
 
-  // Count how many Sundays would have occurred since then
+  // Days in months (non-leap year)
+  const monthDays = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  // Total days from 01/01/0001 to the given date
+  let totalDays = (year - 1) * 365 + countLeapYears(year - 1, 12);
+
+  // Add days for months in current year
+  for (let i = 1; i < month; i++) {
+    totalDays += monthDays[i];
+  }
+
+  // Add leap day if this year is leap and month > Feb
+  if (month > 2 && year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
+    totalDays += 1;
+  }
+
+  // Add day of current month
+  totalDays += day - 1;
+
+  // Subtract Sundays (every 7th day)
   const sundays = Math.floor(totalDays / 7);
-
-  // Adjust total days by removing Sundays
   const effectiveDays = totalDays - sundays;
-
-  // Determine weekday index in 6-day week (0 = Monday, ..., 5 = Saturday)
-  const dayIndex = effectiveDays % 6;
 
   const weekdays = [
     "Monday",
@@ -22,6 +40,7 @@ function sunnySunday(date) {
     "Friday",
     "Saturday",
   ];
+  const dayIndex = effectiveDays % 6;
 
   return weekdays[dayIndex];
 }
