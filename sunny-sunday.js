@@ -1,44 +1,35 @@
 function sunnySunday(date) {
-  // Parse date parts manually
-  const [y, m, d] = [
-    date.getFullYear(),
-    date.getMonth() + 1,
-    date.getDate()
+  // Define the 6-day week days
+  const weekdays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
   ];
 
-  // Check for leap year
-  function isLeapYear(year) {
-    return (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
-  }
+  // calculate the number of days since 01/01/0001
+  // javaScript Date object uses year 1 as minimum, not year 0
+  const referenceDate = new Date(1, 0, 1); // January 1, 0001
+  referenceDate.setFullYear(1); // Ensure year 1
 
-  // Days in each month (non-leap year)
-  const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  // get the input date at midnight to avoid time issues
+  const inputDate = new Date(date);
+  inputDate.setHours(0, 0, 0, 0);
 
-  // Total days in full years before this one
-  let days = (y - 1) * 365
-    + Math.floor((y - 1) / 4)
-    - Math.floor((y - 1) / 100)
-    + Math.floor((y - 1) / 400);
+  // calculate difference in milliseconds
+  const diffMs = inputDate - referenceDate;
 
-  // Add days in months of current year
-  for (let i = 0; i < m - 1; i++) {
-    days += monthDays[i];
-  }
+  // convert to days (1 day = 24 * 60 * 60 * 1000 ms)
+  const diffDays = Math.floor(diffMs / (24 * 60 * 60 * 1000));
 
-  // Add leap day if this year is leap and past Feb
-  if (m > 2 && isLeapYear(y)) {
-    days += 1;
-  }
+  // in a 6-day week system, we use modulo 6
+  // since 01/01/0001 is Monday (index 0), we can directly use the remainder
+  const weekdayIndex = diffDays % 6;
 
-  // Add days in current month
-  days += d - 1;
+  // handle negative dates (before 01/01/0001)
+  const adjustedIndex = weekdayIndex < 0 ? weekdayIndex + 6 : weekdayIndex;
 
-  // Remove Sundays (every 7th day)
-  const sundays = Math.floor(days / 7);
-  const effectiveDays = days - sundays;
-
-  // Return weekday in 6-day week (no Sunday)
-  const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const weekday = weekdays[effectiveDays % 6];
-  return weekday;
+  return weekdays[adjustedIndex];
 }
