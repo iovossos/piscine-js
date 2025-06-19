@@ -87,10 +87,11 @@ class Box {
     this.HTML.style.left = "50%";
     this.HTML.style.transform = "translate(-50%, -50%)";
     document.body.appendChild(this.HTML);
-    this.x = this.HTML.offsetLeft - this.HTML.offsetWidth / 2 - 1; // -1 to account for the border
-    this.y = this.HTML.offsetTop - this.HTML.offsetHeight / 2 - 1;
-    this.width = this.HTML.offsetWidth + 1; // +1 to account for the border
-    this.height = this.HTML.offsetHeight + 1;
+    const rect = this.HTML.getBoundingClientRect();
+    this.x = rect.left;
+    this.y = rect.top;
+    this.width = rect.width;
+    this.height = rect.height;
   }
 }
 
