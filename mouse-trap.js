@@ -24,7 +24,6 @@ class Circle {
   }
   // Moves the circle to the given x and y coordinates
   move(x, y) {
-    this.trapped();
     if (!this.isTrapped) {
       this.x = x;
       this.y = y;
@@ -46,7 +45,9 @@ class Circle {
         }
       }
     }
+    this.trapped();
   }
+
   // Checks if the circle is inside the box
   trapped() {
     if (
