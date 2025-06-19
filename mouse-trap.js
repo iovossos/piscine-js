@@ -30,16 +30,16 @@ class Circle {
       this.HTML.style.top = this.y + "px";
       this.HTML.style.left = this.x + "px";
     } else {
-      if (this.inReactangle(x, y)) {
+      if (this.inRectangle(x, y)) {
         this.x = x;
         this.y = y;
         this.HTML.style.top = this.y + "px";
         this.HTML.style.left = this.x + "px";
       } else {
-        if (this.inReactangle(x, this.y)) {
+        if (this.inRectangle(x, this.y)) {
           this.x = x;
           this.HTML.style.left = this.x + "px";
-        } else if (this.inReactangle(this.x, y)) {
+        } else if (this.inRectangle(this.x, y)) {
           this.y = y;
           this.HTML.style.top = this.y + "px";
         }
@@ -64,7 +64,7 @@ class Circle {
     }
   }
   // Checks if the given x and y coordinates for the circle are inside the box
-  inReactangle(x, y) {
+  inRectangle(x, y) {
     if (
       x > box.x &&
       x + this.diameter < box.x + box.width &&
